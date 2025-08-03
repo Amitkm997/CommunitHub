@@ -1,0 +1,31 @@
+/* Navbar Container */
+.navbar {
+    display: flex;
+    justify-content: space-between; /* Space between left & right sections */
+    align-items: center;
+    background-color: #333;
+    padding: 1rem 2rem;
+  }
+  
+  /* Left section links */
+  .nav-left a {
+    color: #fff;
+    margin-right: 1rem;
+    text-decoration: none;
+  }
+  
+  .nav-left a:hover {
+    text-decoration: underline;
+  }
+  
+  /* Right section links (Login & Register) */
+  .nav-right a {
+    color: #fff;
+    margin-left: 1rem;
+    text-decoration: none;
+  }
+  
+  .nav-right a:hover {
+    text-decoration: underline;
+  }
+  
