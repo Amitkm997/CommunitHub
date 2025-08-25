@@ -9,6 +9,7 @@ import Dashboard from "./components/Dashboard";
 import Posts from "./components/Posts";
 import Comments from "./components/Comments";
 import Profile from "./components/Profile";
+import Home from "./components/Home";
 
 export default function App() {
   return (
@@ -16,7 +17,8 @@ export default function App() {
       <Navbar />
       <main>
         <Routes>
-          <Route path="/" element={<Dashboard />} />
+          <Route path="/" element={<Home/>}></Route>
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/posts" element={<Posts />} />

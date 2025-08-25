@@ -8,7 +8,6 @@ let passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%
 export const register = async (req, res) => {    
     try {
         const { name, email, password } = req.body;
-
         if (!name) res.status(404).send({ message: "Name not found!" })
         if (!email) res.status(404).send({ message: "email not found" })
         if (!password) res.status(404).send({ message: "password not found" })
@@ -29,24 +28,36 @@ export const register = async (req, res) => {
     }
 }
 
-export const logIn=async (req,res) => {
-    const{email,password}=req.body;
-    if(!email) res.status(404).send({message:"please provide email"});
-    if(!password) res.status(404).send({message:"please provide password"})
- 
-    if (!emailRegex.test(email)) return res.status(400).send({ message: "Invalid email" })
-    if (!passwordRegex.test(password)) return res.status(400).send({ message: "Invalid Password" })
-
-    let existUser=await User.findOne({email})
-    if(!existUser) res.status(404).send({message:"user not found plese register first"})
-    
-    let comparePassword=await bcrypt.compare(password,existUser.password)
-    if(!comparePassword) return res.status(400).send({message:"Invalid password or password mismatched"});
-
-    let payload={
-        userId:existUser._id,
-        email:email
+export const logIn = async (req, res) => {
+    try {
+      const { email, password } = req.body;
+  
+      if (!email) return res.status(404).send({ message: "please provide email" });
+      if (!password) return res.status(404).send({ message: "please provide password" });
+  
+      if (!emailRegex.test(email)) return res.status(400).send({ message: "Invalid email" });
+      if (!passwordRegex.test(password)) return res.status(400).send({ message: "Invalid Password" });
+  
+      let existUser = await User.findOne({ email });
+      if (!existUser) return res.status(404).send({ message: "user not found please register first" });
+  
+      let comparePassword = await bcrypt.compare(password, existUser.password);
+      if (!comparePassword) return res.status(400).send({ message: "Invalid password or password mismatched" });
+  
+      let payload = {
+        userId: existUser._id,
+        email: email
+      };
+  
+      const token = jwt.sign(payload, "This is a secret key"); // optional expiry
+  
+      return res.status(200).send({
+        message: "token generated successfully",
+        token: token,
+        user: { id: existUser._id, email: existUser.email } // helpful for frontend
+      });
+    } catch (error) {
+      return res.status(500).send({ message: "Internal server error", error: error.message });
     }
-    const token= await jwt.sign(payload,"This is a secret key");
-    res.status(200).send({message:"token generated successfully",token:token});
-}
+  };
+  

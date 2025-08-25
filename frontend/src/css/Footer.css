@@ -1,15 +1,11 @@
 .footer {
-    background: #333;
-    color: #fff;
-    text-align: center;
-    padding: 1rem 0;
-    position: relative;
-    bottom: 0;
-    width: 100%;
-  }
-  
-  .footer p {
-    margin: 0;
-    font-size: 0.9rem;
-  }
-  
+  background: #333;
+  color: #fff;
+  text-align: center;
+  padding: 1rem 0;
+  position: fixed;   /* Fix it */
+  bottom: 0;         /* Stick to bottom */
+  left: 0;           /* Align to left edge */
+  width: 100%;       /* Full width */
+  z-index: 1000;     /* Stay above other elements */
+}

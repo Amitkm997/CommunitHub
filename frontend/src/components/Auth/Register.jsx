@@ -1,11 +1,14 @@
 import React, { useState } from "react";
 import '../../css/Register.css';
+import API from "../../api";
 export default function Register() {
   const [formData, setFormData] = useState({
     name: "",
     email: "",
     password: ""
   });
+  const[success,setSuccess]=useState('')
+  const[err,setErr]=useState("")
 
   const handleChange = (e) => {
     setFormData((prev) => ({
@@ -14,10 +17,20 @@ export default function Register() {
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async(e) => {
     e.preventDefault();
     console.log("Register data:", formData);
+    setErr('');
+    setSuccess("");
     // Here you’ll make an API call: axios.post('/register', formData)
+    try{
+        const res=await API.post('/user/register',formData);
+        console.log(res)
+        setSuccess(res.data.message)
+    }catch(error){
+        const message=error.response?.data?.message||error.message;
+        setErr(message)
+    }
   };
 
   return (
@@ -61,6 +74,8 @@ export default function Register() {
         </label>
 
         <button type="submit">Register</button>
+        {err&& <p>{err}</p>}
+        {success && <p>{success}</p>}
       </form>
     </div>
   );

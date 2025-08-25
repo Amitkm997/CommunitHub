@@ -9,8 +9,9 @@ const router=express.Router();
 import upload from '../middleware/multer.js';   // <-- import multer middleware
 
 
-router.post('/create',authentication, upload.single("image"),createProfile);
-router.get('/get',authentication,getProfile);
+// router.post('/create',authentication, upload.single("image"),createProfile);
+router.post("/create",authentication,  upload.single("file"), createProfile);
+router.get('/me',authentication,getProfile);
 
 //profile upload route
 router.post("/upload", upload.single("image"), (req, res) => {

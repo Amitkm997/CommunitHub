@@ -14,16 +14,33 @@ export const createPost = async (req, res) => {
 
 export const getPosts = async (req, res) => {
     try {
-        let pages = req.params.page
-        let limit = 5
-        let skip = (pages - 1) * limit
-        let posts = await Post.find({ user: req.user.userId }).sort({ createdAt: -1 })
-            .skip(skip).limit(limit).sort({ createdAt: 1 })
-        res.status(200).send({ message: "post fetched successfully", posts: posts })
+      let page = parseInt(req.params.page) || 1; // default to 1
+      let limit = 5;
+      let skip = (page - 1) * limit;
+  
+      let posts = await Post.find({ user: req.user.userId })
+        .sort({ createdAt: -1 }) // newest first
+        .skip(skip)
+        .limit(limit);
+  
+      // count total posts for pagination info
+      let totalPosts = await Post.countDocuments({ user: req.user.userId });
+      let totalPages = Math.ceil(totalPosts / limit);
+  
+      res.status(200).send({
+        message: "Posts fetched successfully",
+        posts,
+        pagination: {
+          currentPage: page,
+          totalPages,
+          totalPosts,
+        },
+      });
     } catch (err) {
-        res.status(500).send({ message: "Internal server error", error: err.message })
+      res.status(500).send({ message: "Internal server error", error: err.message });
     }
-}
+  };
+  
 
 export const deletePost = async (req, res) => {
     try {
@@ -33,6 +50,24 @@ export const deletePost = async (req, res) => {
     } catch (err) {
         res.status(500).send({ message: "Internal server error", error: err.message })
     }
+}
+
+export const updatePost=async(req,res)=>{
+    try{
+        let postId=req.params.postId;
+        const{content,title}=req.body;
+        // let post=await Post.findById(postId);
+        // if(!post) return req.status(404).send({message:"post not found"})
+        // post.title=title;
+        // post.content=content;
+        // post.save()
+        let post=await Post.findByIdAndUpdate(postId,{content,title},{new:true})
+        console.log(post)
+        res.status(200).send({message:"post updated successfully",post:post})    
+    }catch(err){
+        res.status(500).send({ message: "Internal server error", error: err.message })
+    }
+   
 }
 
 export const getAllPost = async (req, res) => {
